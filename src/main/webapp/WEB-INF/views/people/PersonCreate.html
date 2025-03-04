@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library | Person</title>
+</head>
+<body>
+
+<div>
+    <form th:method="POST" th:object="${person}" th:action="@{/people/create}">
+        <hr/>
+        <br/>
+        <label for="name">Введите имя: </label>
+        <input type="text" th:field="*{name}" id="name">
+        <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+        <br/>
+        <hr/>
+
+        <br/>
+        <label for="year">Введите год рождения: </label>
+        <input type="number" th:field="*{year}" id="year">
+        <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Year error</div>
+        <br/>
+        <hr/>
+
+        <br/>
+        <input type="submit" value="Создать">
+        <br/>
+        <hr/>
+    </form>
+</div>
+
+</body>
+</html>

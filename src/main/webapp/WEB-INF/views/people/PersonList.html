@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library | Person</title>
+</head>
+<body>
+
+<div>
+    <hr/>
+    <br/>
+    <form th:method="GET" th:action="@{/people}">
+
+        <input type="text" name="search" placeholder="Введите имя"/>
+        <input type="hidden" name="sortByName" th:value="${sortByName}"/>
+        <input type="hidden" name="page" th:value="${page}"/>
+
+        <select onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Выберите человека</option>
+            <option th:each="person : ${searchList}"
+                    th:value="@{/people/{id}(id=${person.getPersonId()})}"
+                    th:text="${person.getName()}">
+            </option>
+        </select>
+        <br/>
+
+        <button type="submit">Найти человека</button>
+    </form>
+    <br/>
+    <hr/>
+</div>
+
+<div th:each="person : ${people}">
+    <a th:href="@{/people/{id} (id=${person.getPersonId()})}" th:text="'Имя: ' + ${person.getName()} + ', Год рождения: ' + ${person.getYear()}"/>
+</div>
+
+<div>
+
+    <hr/>
+    <a th:text="'Страница №: ' + ${page + 1}"/>
+    <br/>
+    <a th:if="${page >= 0}" th:href="@{/people(sortByName=${sortByName}, page=${page + 1})}">Следующая страница</a>
+    <a th:if="${page >= 0}" th:href="@{/people(sortByName=${sortByName}, page=${page - 1})}">Предыдущая страница</a>
+
+
+</div>
+
+<div>
+    <br/>
+    <hr/>
+    <br/>
+    <form th:action="@{/people}" method="get">
+        <input type="hidden" name="sortByName" th:value="${!sortByName}" />
+        <input type="hidden" name="page" th:value="${page}" />
+        <input type="submit" value="Отсортировать по имени">
+    </form>
+</div>
+
+<div>
+    <hr/>
+    <br/>
+    <form th:action="@{/people/create}">
+        <input type="submit" value="Создать читателя">
+    </form>
+    <hr/>
+</div>
+</body>
+</html>
