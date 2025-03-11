@@ -9,7 +9,7 @@
 <div>
     <hr/>
     <br/>
-    <form th:method="GET" th:action="@{/people}">
+    <form>
 
         <input type="text" name="search" placeholder="Введите имя"/>
         <input type="hidden" name="sortByName" th:value="${sortByName}"/>
@@ -35,21 +35,18 @@
 </div>
 
 <div>
-
     <hr/>
     <a th:text="'Страница №: ' + ${page + 1}"/>
     <br/>
-    <a th:if="${page >= 0}" th:href="@{/people(sortByName=${sortByName}, page=${page + 1})}">Следующая страница</a>
-    <a th:if="${page >= 0}" th:href="@{/people(sortByName=${sortByName}, page=${page - 1})}">Предыдущая страница</a>
-
-
+    <a th:href="@{/people(sortByName=${sortByName}, page=${page - 1})}">Предыдущая страница</a>
+    <a th:href="@{/people(sortByName=${sortByName}, page=${page + 1})}">Следующая страница</a>
 </div>
 
 <div>
     <br/>
     <hr/>
     <br/>
-    <form th:action="@{/people}" method="get">
+    <form>
         <input type="hidden" name="sortByName" th:value="${!sortByName}" />
         <input type="hidden" name="page" th:value="${page}" />
         <input type="submit" value="Отсортировать по имени">

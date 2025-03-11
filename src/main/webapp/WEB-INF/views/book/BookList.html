@@ -29,5 +29,19 @@
     <br/>
 </div>
 
+<div>
+    <form>
+        <input type="hidden" name="page" th:value="${page}">
+        <input type="hidden" name="sortByName" th:value="${sortByName}">
+        <input type="submit" value="Отсортировать по имени">
+    </form>
+</div>
+
+<div>
+    <a th:href="@{/books(page=(${page} + 1), sortByName=(${sortByName}))}">Следующая страница</a>
+    <a th:href="@{/books(page=(${page} - 1), sortByName=())}">Предыдущая страница</a>
+    <a th:value="'Страница №:' + ${page}"></a>
+</div>
+
 </body>
 </html>

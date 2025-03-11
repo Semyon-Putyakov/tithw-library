@@ -47,7 +47,7 @@
 </div>
 
 <div>
-    <form th:method="PATCH" th:action="@{/books/{id}/edit (id=${book.getBookId()})}">
+    <form th:action="@{/books/{id}/edit (id=${book.getBookId()})}">
         <input type="submit" value="Изменить книгу">
     </form>
     <hr/>

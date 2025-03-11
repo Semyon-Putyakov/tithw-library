@@ -2,6 +2,8 @@ package ru.javabegin.semyon.services;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +26,13 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<Book> getAllBooks(int page, int size) {
+        return bookRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
     @Transactional(readOnly = true)
-    public List<Book> getAllBooksSorted() {
-        return getAllBooks().stream().sorted().collect(Collectors.toList()); // реализую и такой и такой метод сортировки
+    public List<Book> getAllBooksSorted(int page, int size) {
+        return bookRepository.findAll(PageRequest.of(page,size,Sort.by("name"))).getContent();
     }
 
     @Transactional(readOnly = true)

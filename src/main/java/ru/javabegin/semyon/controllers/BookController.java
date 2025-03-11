@@ -27,13 +27,18 @@ public class BookController {
     }
 
     @GetMapping
-    public String getBooks(Model model, @RequestParam(defaultValue = "false", name = "sortByName", required = false) boolean sort) {
+    public String getBooks(Model model,
+                           @RequestParam(defaultValue = "false", name = "sortByName", required = false) boolean sort,
+                           @RequestParam(defaultValue = "false", name = "page", required = false) int page)
+    {
         if(!sort){
-            model.addAttribute("books", bookService.getAllBooks());
+            model.addAttribute("books", bookService.getAllBooks(page,5));
         }
         else{
-            model.addAttribute("books", bookService.getAllBooksSorted());
+            model.addAttribute("books", bookService.getAllBooksSorted(page,5));
         }
+        model.addAttribute("sortByName", sort);
+        model.addAttribute("page", page);
         return "book/BookList";
     }
 

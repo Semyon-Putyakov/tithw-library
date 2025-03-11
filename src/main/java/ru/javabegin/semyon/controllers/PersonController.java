@@ -30,15 +30,31 @@ public class PersonController {
                              @RequestParam(name = "sortByName", required = false,defaultValue = "false") boolean sortByName,
                              @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                              @RequestParam(name = "search", required = false) String search){
-
-        if (sortByName) {
-            model.addAttribute("people", personService.getAllPersonsSorted(page,10));
+        
+        if(page >= 0){
+            List<Person> people;
+            if (sortByName) {
+                people = personService.getAllPersonsSorted(page,10);
+                if(!people.isEmpty()){
+                    model.addAttribute("people", people);
+                    model.addAttribute("page", page);
+                } else {
+                    return "redirect:/people?sortByName=" + sortByName + "&page=" + (page - 1);
+                }
+            } else {
+                people = personService.getAllPersons(page,10);
+                if(!people.isEmpty()){
+                    model.addAttribute("people", people);
+                    model.addAttribute("page", page);
+                }else {
+                    return "redirect:/people?sortByName=" + sortByName + "&page=" + (page - 1);
+                }
+            }
         } else {
-            model.addAttribute("people", personService.getAllPersons(page,10));
+            return "redirect:/people?sortByName=" + sortByName + "&page=" + 0;
         }
 
         model.addAttribute("sortByName", sortByName);
-        model.addAttribute("page", page);
 
         List<Person> searchList = personService.getPersonLikeName(search);
         model.addAttribute("searchList", searchList);
