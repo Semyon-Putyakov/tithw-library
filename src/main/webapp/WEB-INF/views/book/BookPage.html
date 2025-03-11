@@ -6,52 +6,39 @@
 </head>
 <body>
 <div>
-    <hr/>
-    <br/>
     <a th:text="'Название книги: ' + ${book.getName()} + ', Автор: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"></a>
-    <br/>
-    <br/>
-    <hr/>
 </div>
 
 <div th:if="${personWithBook == null}">
-    <br/>
-    <form th:method="PATCH" th:action="@{/books/{id}/setBook (id=${book.getBookId()})}">
+    <form th:method="PATCH" th:action="@{/books/{id}/setBook (id=${book.getBookId()})}" th:object="${book}">
         <a>Выберите читателя: </a>
         <select th:object="${person}" th:field="*{personId}">
             <option th:each="person : ${people}" th:value="${person.getPersonId()}" th:text="${person.getName()}"></option>
         </select>
+        <label for="date">Введите дату возврата книги</label>
+        <input type="date" th:field="*{date}" id="date">
         <input type="submit" value="Подтвердить">
     </form>
-    <br/>
 </div>
 
 <div th:if="${personWithBook != null}">
-    <br/>
     <a>Читатель: </a>
     <a th:text="${book.getOwner.getName()}"></a>
     <form th:method="DELETE" th:action="@{/books/{id}/setBook/delete (id=${book.getBookId()})}">
         <input type="submit" value="Освободить книгу">
     </form>
-    <br/>
 </div>
 
 <div>
-    <hr/>
-    <br/>
     <form th:method="DELETE" th:action="@{/books/{id}/delete (id=${book.getBookId()})}">
         <input type="submit" value="Удалить книгу">
     </form>
-    <hr/>
-    <br/>
 </div>
 
 <div>
     <form th:action="@{/books/{id}/edit (id=${book.getBookId()})}">
         <input type="submit" value="Изменить книгу">
     </form>
-    <hr/>
-    <br/>
 </div>
 
 

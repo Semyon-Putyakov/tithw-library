@@ -1,6 +1,5 @@
 package ru.javabegin.semyon.services;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -10,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javabegin.semyon.models.Book;
 import ru.javabegin.semyon.models.Person;
 import ru.javabegin.semyon.repositories.BookRepository;
+
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Transactional
 @Service
@@ -64,10 +65,6 @@ public class BookService {
         return bookRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public void setBookOwner(Book book, Person person) {
-        book.setOwner(person);
-        bookRepository.save(book);
-    }
 
     @Transactional(readOnly = true)
     public Person ownerIsPresent(int id) {
@@ -75,11 +72,22 @@ public class BookService {
         return book.getOwner();
     }
 
-    public void setBookOwner(int id, Person person){
-        bookRepository.findById(id).orElse(null).setOwner(person);
+    public void setBookOwner(int id, Person person,Book book){
+        Book bookNew = bookRepository.findById(id).orElse(null);
+        bookNew.setDate(book.getDate());
+        bookNew.setOwner(person);
+        bookRepository.save(bookNew);
     }
 
     public void deleteBookOwner(int id){
-        bookRepository.findById(id).orElse(null).setOwner(null);
+        Book book = bookRepository.findById(id).orElse(null);
+        book.setOwner(null);
+        book.setDate(null);
+        bookRepository.save(book);
     }
+
+    public Date getBookDate(int id) {
+        return bookRepository.findById(id).get().getDate();
+    }
+
 }

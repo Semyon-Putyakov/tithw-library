@@ -11,6 +11,7 @@ import ru.javabegin.semyon.models.Person;
 import ru.javabegin.semyon.services.BookService;
 import ru.javabegin.semyon.services.PersonService;
 import ru.javabegin.semyon.util.BookValidator;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -28,25 +29,46 @@ public class BookController {
 
     @GetMapping
     public String getBooks(Model model,
-                           @RequestParam(defaultValue = "false", name = "sortByName", required = false) boolean sort,
-                           @RequestParam(defaultValue = "false", name = "page", required = false) int page)
+                           @RequestParam(defaultValue = "false", name = "sortByName", required = false) boolean sortByName,
+                           @RequestParam(defaultValue = "0", name = "page", required = false) int page,
+                           @RequestParam(name = "search", required = false) String search)
     {
-        if(!sort){
-            model.addAttribute("books", bookService.getAllBooks(page,5));
+        if(page >= 0){
+            List<Book> books;
+            if(!sortByName){
+                books = bookService.getAllBooks(page,10);
+                if(!books.isEmpty()){
+                    model.addAttribute("books", books);
+                    model.addAttribute("page", page);
+                } else {
+                    return "redirect:/books?sortByName=" + sortByName + "&page=" + (page - 1);
+                }
+            }
+            else{
+                books = bookService.getAllBooksSorted(page,10);
+                if(!books.isEmpty()){
+                    model.addAttribute("books", books);
+                    model.addAttribute("page", page);
+                } else {
+                    return "redirect:/books?sortByName=" + sortByName + "&page=" + (page - 1);
+                }
+            }
+            model.addAttribute("sortByName", sortByName);
+            model.addAttribute("listBooks", bookService.getBooksLikeName(search));
+        } else {
+            return "redirect:/books?sortByName=" + sortByName + "&page=" + 0;
         }
-        else{
-            model.addAttribute("books", bookService.getAllBooksSorted(page,5));
-        }
-        model.addAttribute("sortByName", sort);
-        model.addAttribute("page", page);
         return "book/BookList";
     }
 
+
     @GetMapping("/{id}")
-    public String getBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
+    public String getBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person){
         model.addAttribute("personWithBook", bookService.ownerIsPresent(id));
         model.addAttribute("book", bookService.getBookById(id));
         model.addAttribute("people", personService.findAll());
+        System.out.println(bookService.getBookById(id));
+
         return "book/BookPage";
     }
 
@@ -88,8 +110,9 @@ public class BookController {
     }
 
     @PatchMapping("/{id}/setBook")
-    public String setBook(@PathVariable("id") int id, @ModelAttribute("person") Person person){
-        bookService.setBookOwner(id, person);
+    public String setBook(@PathVariable("id") int id, @ModelAttribute("person") Person person, @ModelAttribute("book") Book book){
+        System.out.println(book.getDate());
+        bookService.setBookOwner(id, person, book);
         return "redirect:/books";
     }
 

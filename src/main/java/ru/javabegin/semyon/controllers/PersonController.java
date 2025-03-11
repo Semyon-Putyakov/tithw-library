@@ -50,14 +50,12 @@ public class PersonController {
                     return "redirect:/people?sortByName=" + sortByName + "&page=" + (page - 1);
                 }
             }
+            model.addAttribute("sortByName", sortByName);
+            model.addAttribute("searchList", personService.getPersonLikeName(search));
         } else {
             return "redirect:/people?sortByName=" + sortByName + "&page=" + 0;
         }
 
-        model.addAttribute("sortByName", sortByName);
-
-        List<Person> searchList = personService.getPersonLikeName(search);
-        model.addAttribute("searchList", searchList);
 
         return "people/PersonList";
     }

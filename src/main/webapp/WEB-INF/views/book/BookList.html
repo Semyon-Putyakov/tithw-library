@@ -2,45 +2,168 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Библиотека: Управление книгами</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Формы и кнопки */
+        input[type="text"], select, button {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Ссылки */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* Карточки книг */
+        .book-link {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .book-link:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        /* Пагинация */
+        .pagination {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .pagination a {
+            margin: 0 10px;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Формы в строку */
+        .form-inline {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
 </head>
 <body>
-<div th:each="book :${books}">
-    <a th:href="@{/books/{id} (id=${book.getBookId()})}" th:text=
-            "'Название книги: ' + ${book.getName()} + ', Автор: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"/>
-</div>
-<hr/>
-<br/>
 
-<div>
+<div class="container fade-in">
+    <h1>Библиотека: Управление книгами</h1>
+
+    <!-- Поиск и выбор книги -->
+    <form class="form-inline">
+        <input type="text" name="search" placeholder="Введите название книги"/>
+        <select onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Выберите книгу</option>
+            <option th:each="book : ${listBooks}"
+                    th:value="@{/books/{id}(id=${book.getBookId()})}"
+                    th:text="${book.getName()}">
+            </option>
+        </select>
+        <button type="submit">Найти книгу</button>
+    </form>
+
+    <!-- Список книг -->
+    <div th:each="book : ${books}">
+        <a class="book-link" th:href="@{/books/{id} (id=${book.getBookId()})}"
+           th:text="'Название книги: ' + ${book.getName()} + ', Автор: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"/>
+    </div>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+        <a th:href="@{/books(page=(${page} - 1), sortByName=(${sortByName}))}">Предыдущая страница</a>
+        <span th:text="'Страница №: ' + ${page + 1}"/>
+        <a th:href="@{/books(page=(${page} + 1), sortByName=(${sortByName}))}">Следующая страница</a>
+    </div>
+
+    <!-- Создание новой книги -->
     <form th:action="@{/books/create}">
-        <input type="submit" value="Создать новую книгу">
+        <button type="submit">Создать новую книгу</button>
     </form>
-    <hr/>
-    <br/>
-</div>
 
-<div>
-    <form method="get" action="books">
-        <input type="hidden" value="true" name="sortByName"/>
-        <button type="submit">Отсортировать по названии</button>
-    </form>
-    <hr/>
-    <br/>
-</div>
-
-<div>
-    <form>
+    <!-- Сортировка по имени -->
+    <form class="form-inline">
         <input type="hidden" name="page" th:value="${page}">
-        <input type="hidden" name="sortByName" th:value="${sortByName}">
-        <input type="submit" value="Отсортировать по имени">
+        <input type="hidden" name="sortByName" th:value="${!sortByName}">
+        <button type="submit">Отсортировать по названию</button>
     </form>
-</div>
-
-<div>
-    <a th:href="@{/books(page=(${page} + 1), sortByName=(${sortByName}))}">Следующая страница</a>
-    <a th:href="@{/books(page=(${page} - 1), sortByName=())}">Предыдущая страница</a>
-    <a th:value="'Страница №:' + ${page}"></a>
 </div>
 
 </body>

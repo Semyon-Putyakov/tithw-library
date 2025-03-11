@@ -7,46 +7,33 @@
 <body>
 
 <div>
-    <hr/>
-    <br/>
     <a th:text="'Имя: ' + ${person.getName()} + ', Год рождения: ' + ${person.getYear()}"></a>
-    <br/>
-    <hr/>
 </div>
 
 <div th:if="${books.isEmpty()}">
-    <br/>
     <a>Читатель не взял ни одной книги</a>
-    <br/>
 </div>
 
 <div th:if="${!books.isEmpty()}">
-    <br/>
     <a>Книги: </a>
     <div th:each="book : ${books}">
         <a th:text="'Название книги: ' + ${book.getName()} + ', Автор книги: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"></a>
     </div>
-    <br/>
 </div>
 
 
 
 <div>
-    <hr/>
-    <br/>
     <form th:action="@{/people/{id}/edit (id=${person.getPersonId()})}">
         <input type="submit" value="Изменить читателя">
     </form>
-    <hr/>
 </div>
 
 
 <div>
-    <br/>
     <form th:method="DELETE" th:action="@{/people/{id}/delete (id=${person.getPersonId()})}">
         <input type="submit" value="Удалить читателя">
     </form>
-    <hr/>
 </div>
 
 </body>

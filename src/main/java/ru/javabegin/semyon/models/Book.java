@@ -2,6 +2,9 @@ package ru.javabegin.semyon.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -31,11 +34,18 @@ public class Book implements Comparable<Book> {
     @Column(name = "year")
     private int year;
 
+
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date date;
+
     @ManyToOne()
     @JoinColumn(name = "person_id", referencedColumnName = "person_id")
     private Person owner;
 
-    public Book(int bookId, String name, String author, int year, Person owner) {
+    public Book(int bookId, String name, String author, int year, Person owner, Date date) {
+        this.date = date;
         this.bookId = bookId;
         this.name = name;
         this.author = author;
@@ -85,5 +95,25 @@ public class Book implements Comparable<Book> {
 
     public void setOwner(Person owner) {
         this.owner = owner;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", year=" + year +
+                ", date=" + date +
+                ", owner=" + owner +
+                '}';
     }
 }

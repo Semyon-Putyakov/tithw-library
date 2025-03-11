@@ -6,23 +6,18 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/books/create}" th:object="${book}">
-    <hr/>
-    <br/>
     <label for="name">Введите название: </label>
     <input type="text" th:field="*{name}" id="name">
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-    <hr/>
-    <br/>
+
     <label for="year">Введите год: </label>
     <input type="number" th:field="*{year}" id="year">
     <div th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
-    <hr/>
-    <br/>
+
     <label for="author">Введите автора: </label>
     <input type="text" th:field="*{author}" id="author">
     <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
-    <hr/>
-    <br/>
+
     <input type="submit" value="Создать">
 </form>
 

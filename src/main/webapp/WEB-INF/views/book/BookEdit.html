@@ -9,17 +9,14 @@
     <label for="name">Введите новое название: </label>
     <input type="text" th:field="*{name}" id="name">
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
-    <br/>
 
     <label for="year">Введите новый год: </label>
     <input type="name" th:field="*{year}" id="year">
     <div th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
-    <br/>
 
     <label for="author">Введите нового автора: </label>
     <input type="text" th:field="*{author}" id="author">
     <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
-    <br/>
 
     <input type="submit" value="Подтвердить">
 </form>
