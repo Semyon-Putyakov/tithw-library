@@ -6,11 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.javabegin.semyon.dto.DateDTO;
 import ru.javabegin.semyon.models.Book;
 import ru.javabegin.semyon.models.Person;
 import ru.javabegin.semyon.services.BookService;
 import ru.javabegin.semyon.services.PersonService;
 import ru.javabegin.semyon.util.BookValidator;
+
 import java.util.List;
 
 @Controller
@@ -63,12 +65,14 @@ public class BookController {
 
 
     @GetMapping("/{id}")
-    public String getBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person){
-        model.addAttribute("personWithBook", bookService.ownerIsPresent(id));
+    public String getBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person, @ModelAttribute("dateDTO") DateDTO dateDTO){
+        Person personIsPresent =  bookService.ownerIsPresent(id);
+        if(personIsPresent != null){
+            model.addAttribute("expired",bookService.bookIsExpired(id));
+        }
+        model.addAttribute("personWithBook", personIsPresent);
         model.addAttribute("book", bookService.getBookById(id));
         model.addAttribute("people", personService.findAll());
-        System.out.println(bookService.getBookById(id));
-
         return "book/BookPage";
     }
 
@@ -110,9 +114,17 @@ public class BookController {
     }
 
     @PatchMapping("/{id}/setBook")
-    public String setBook(@PathVariable("id") int id, @ModelAttribute("person") Person person, @ModelAttribute("book") Book book){
-        System.out.println(book.getDate());
-        bookService.setBookOwner(id, person, book);
+    public String setBook(@PathVariable("id") int id,
+                          @ModelAttribute("person") Person person,
+                          @ModelAttribute("dateDTO") @Valid DateDTO dto, BindingResult bindingResult,
+                          Model model){
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("personWithBook", bookService.ownerIsPresent(id));
+            model.addAttribute("book", bookService.getBookById(id));
+            model.addAttribute("people", personService.findAll());
+            return "book/BookPage";
+        }
+        bookService.setBookOwner(id, person, dto.getDate());
         return "redirect:/books";
     }
 

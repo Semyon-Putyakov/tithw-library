@@ -2,38 +2,132 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Library | Person</title>
+    <title>Library | Person Details</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Формы и кнопки */
+        input[type="text"], select, button, input[type="submit"] {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        button, input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Ссылки */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* Карточки книг */
+        .book-link {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .book-link:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
 </head>
 <body>
 
-<div>
-    <a th:text="'Имя: ' + ${person.getName()} + ', Год рождения: ' + ${person.getYear()}"></a>
-</div>
+<div class="container fade-in">
+    <h1>Детали читателя</h1>
 
-<div th:if="${books.isEmpty()}">
-    <a>Читатель не взял ни одной книги</a>
-</div>
-
-<div th:if="${!books.isEmpty()}">
-    <a>Книги: </a>
-    <div th:each="book : ${books}">
-        <a th:text="'Название книги: ' + ${book.getName()} + ', Автор книги: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"></a>
+    <div>
+        <a class="person-link" th:text="'Имя: ' + ${person.getName()} + ', Год рождения: ' + ${person.getYear()}"></a>
     </div>
-</div>
 
+    <div th:if="${books.isEmpty()}">
+        <p>Читатель не взял ни одной книги</p>
+    </div>
 
+    <div th:if="${!books.isEmpty()}">
+        <h2>Книги:</h2>
+        <div th:each="book : ${books}">
+            <div class="book-link">
+                <a th:text="'Название книги: ' + ${book.getName()} + ', Автор книги: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()} + ', Дата возврата: ' + ${book.getDate()}"></a>
+            </div>
+        </div>
+    </div>
 
-<div>
-    <form th:action="@{/people/{id}/edit (id=${person.getPersonId()})}">
-        <input type="submit" value="Изменить читателя">
-    </form>
-</div>
+    <div>
+        <form th:action="@{/people/{id}/edit (id=${person.getPersonId()})}">
+            <input type="submit" value="Изменить читателя">
+        </form>
+    </div>
 
-
-<div>
-    <form th:method="DELETE" th:action="@{/people/{id}/delete (id=${person.getPersonId()})}">
-        <input type="submit" value="Удалить читателя">
-    </form>
+    <div>
+        <form th:method="DELETE" th:action="@{/people/{id}/delete (id=${person.getPersonId()})}">
+            <input type="submit" value="Удалить читателя">
+        </form>
+    </div>
 </div>
 
 </body>

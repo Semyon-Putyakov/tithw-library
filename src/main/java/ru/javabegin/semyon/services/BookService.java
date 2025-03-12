@@ -72,9 +72,9 @@ public class BookService {
         return book.getOwner();
     }
 
-    public void setBookOwner(int id, Person person,Book book){
+    public void setBookOwner(int id,Person person,Date date){
         Book bookNew = bookRepository.findById(id).orElse(null);
-        bookNew.setDate(book.getDate());
+        bookNew.setDate(date);
         bookNew.setOwner(person);
         bookRepository.save(bookNew);
     }
@@ -88,6 +88,15 @@ public class BookService {
 
     public Date getBookDate(int id) {
         return bookRepository.findById(id).get().getDate();
+    }
+
+    public boolean bookIsExpired(int id){
+        Book book = bookRepository.findById(id).orElse(null);
+        if(book.getDate().before(new Date())){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -127,7 +127,6 @@
 <div class="container fade-in">
     <h1>Библиотека: Управление книгами</h1>
 
-    <!-- Поиск и выбор книги -->
     <form class="form-inline">
         <input type="text" name="search" placeholder="Введите название книги"/>
         <select onchange="if(this.value) window.location.href=this.value;">
@@ -140,25 +139,25 @@
         <button type="submit">Найти книгу</button>
     </form>
 
-    <!-- Список книг -->
+
     <div th:each="book : ${books}">
         <a class="book-link" th:href="@{/books/{id} (id=${book.getBookId()})}"
            th:text="'Название книги: ' + ${book.getName()} + ', Автор: ' + ${book.getAuthor()} + ', Год: ' + ${book.getYear()}"/>
     </div>
 
-    <!-- Пагинация -->
+
     <div class="pagination">
         <a th:href="@{/books(page=(${page} - 1), sortByName=(${sortByName}))}">Предыдущая страница</a>
         <span th:text="'Страница №: ' + ${page + 1}"/>
         <a th:href="@{/books(page=(${page} + 1), sortByName=(${sortByName}))}">Следующая страница</a>
     </div>
 
-    <!-- Создание новой книги -->
+
     <form th:action="@{/books/create}">
         <button type="submit">Создать новую книгу</button>
     </form>
 
-    <!-- Сортировка по имени -->
+
     <form class="form-inline">
         <input type="hidden" name="page" th:value="${page}">
         <input type="hidden" name="sortByName" th:value="${!sortByName}">

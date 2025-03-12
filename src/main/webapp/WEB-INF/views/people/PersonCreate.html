@@ -2,19 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Library | Person</title>
+    <title>Library | Create Person</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Формы и кнопки */
+        input[type="text"], input[type="number"], input[type="submit"] {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Ошибки */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
 </head>
 <body>
 
-<div>
-    <form th:method="POST" th:object="${person}" th:action="@{/people/create}">
-        <label for="name">Введите имя: </label>
-        <input type="text" th:field="*{name}" id="name">
-        <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+<div class="container fade-in">
+    <h1>Создание нового читателя</h1>
 
-        <label for="year">Введите год рождения: </label>
-        <input type="number" th:field="*{year}" id="year">
-        <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Year error</div>
+    <form th:method="POST" th:object="${person}" th:action="@{/people/create}">
+        <div>
+            <label for="name">Введите имя:</label>
+            <input type="text" th:field="*{name}" id="name"/>
+            <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка в имени</div>
+        </div>
+
+        <div>
+            <label for="year">Введите год рождения:</label>
+            <input type="number" th:field="*{year}" id="year"/>
+            <div class="error-message" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Ошибка в годе рождения</div>
+        </div>
 
         <input type="submit" value="Создать">
     </form>

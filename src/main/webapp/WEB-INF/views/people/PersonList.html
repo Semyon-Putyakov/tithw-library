@@ -127,7 +127,6 @@
 <div class="container fade-in">
     <h1>Библиотека: Управление читателями</h1>
 
-    <!-- Поиск и выбор человека -->
     <form class="form-inline">
         <input type="text" name="search" placeholder="Введите имя"/>
         <select onchange="if(this.value) window.location.href=this.value;">
@@ -140,26 +139,22 @@
         <button type="submit">Найти человека</button>
     </form>
 
-    <!-- Список людей -->
     <div th:each="person : ${people}">
         <a class="person-link" th:href="@{/people/{id} (id=${person.getPersonId()})}" th:text="'Имя: ' + ${person.getName()} + ', Год рождения: ' + ${person.getYear()}"/>
     </div>
 
-    <!-- Пагинация -->
     <div class="pagination">
         <a th:href="@{/people(sortByName=${sortByName}, page=${page - 1})}">Предыдущая страница</a>
         <span th:text="'Страница №: ' + ${page + 1}"/>
         <a th:href="@{/people(sortByName=${sortByName}, page=${page + 1})}">Следующая страница</a>
     </div>
 
-    <!-- Сортировка -->
     <form class="form-inline">
         <input type="hidden" name="sortByName" th:value="${!sortByName}" />
         <input type="hidden" name="page" th:value="${page}" />
         <button type="submit">Отсортировать по имени</button>
     </form>
 
-    <!-- Создание нового читателя -->
     <form th:action="@{/people/create}">
         <button type="submit">Создать читателя</button>
     </form>
